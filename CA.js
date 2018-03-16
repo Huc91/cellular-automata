@@ -1,8 +1,8 @@
 //wolfram automaton
 //array of cells
 //edit on Shiffman example
-var cells = [0, 1, 1 ,0 ,1 ,0 ,1 ,0 ,0];
-var art = 0.8
+var cells = [0, 0, 0 ,1 ,1 ,1 ,0 ,0 ,0];
+var art = 0.2
 
 
 var ruleset = [1,0,0,1,1,0,1,0];
@@ -35,14 +35,18 @@ function display() {
     } else if (cells[i] == 0) {
       if (Math.random() <= art){
         fill(125)
+        noStroke();
+        triangle(i*w, generation*w+50, i*w+25, generation*w, i*w+50, generation*w+50);
       } else {
         fill(0)
+        noStroke();
+        rect(i*w, generation*w, w, w);
       }
     } else {
       fill (125);
+      noStroke();
+      rect(i*w, generation*w, w, w);
     }
-    noStroke();
-    rect(i*w, generation*w, w, w);
   }
 };
 
