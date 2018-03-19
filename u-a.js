@@ -1,108 +1,122 @@
 //logo generator for U - A Umanesimo Artificiale
 //author: Luca Ucciero
 
-//contains
-//a wolfram cellular automaton based on Shiffman's book The Nature of Code http://natureofcode.com/
-//deeply customized and edited to for my goals
-var creSlider, emoSlider, effSlider, immSlider;
+document.addEventListener("DOMContentLoaded", function() {
+  //sliders
+  var creSlider = document.getElementById('creSlider');
+  console.log(creSlider.value);
 
-var cells = [0, 0, 0 ,1 ,1 ,1 ,0 ,0 ,0];
+  var cells = [1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0];
 
+  var matrix = [];
 
-var ruleset = [1,0,0,1,1,0,1,0];
-var generation = 0;
-var w = 50;
-
-function setup() {
-  //console.log(slider.value());
-  var canvas = createCanvas(800, 2000);
-  canvas.parent('sketch-holder');
-  stroke(255);
-  noFill();
-
-  creSlider = createSlider(0, 1, 0.5, 0.001);
-  setSlider(creSlider);
-  creSlider.changed(resetGen);
-}
-
-function draw() {
-  var art = creSlider.value();
-  console.log("in draw" + art);
-  //console.log(art);
-  //var val = creSlider.value();
-
-  if(generation <= 8){
-    generate(cells, art);
+  //from "Tables of Cellular Automaton Properties" paper, 1986
+  var rulesList = {
+    rule_1:   [0, 0, 0, 0, 0, 0, 0, 1],
+    rule_11:  [0, 0, 0, 0, 1, 0, 1, 1],
+    rule_18:  [0, 0, 0, 1, 0, 0, 1, 0],
+    rule_19:  [0, 0, 0, 1, 0, 0, 1, 1],
+    rule_57:  [1, 0, 0, 0, 0 ,0, 0, 0],
+    rule_73:  [0, 1, 0, 0, 1, 0, 0, 1],
+    rule_105: [0, 1, 1, 0, 1, 0, 0, 1],
+    rule_110: [0, 1, 1, 0, 1, 1, 1, 0]
   }
-}
 
-function resetGen(){
-  generation = 0;
-  console.log(generation);
-  //generate(cells, art)
-}
+  var ruleset = rulesList.rule_1;
 
-function generate(cells, art){
-  console.log("in generate" + art);
-  // First we create an empty array filled with 0s for the new values
-  var nextgen = [];
-  for (var i = 0; i < cells.length; i++) {
-    nextgen[i] = 0;
-  }
-  // For every spot, determine new state by examing current state, and neighbor states
-  // Ignore edges that only have one neighor
-  for (var i = 1; i < cells.length-1; i++) {
-    var left   = cells[i-1];   // Left neighbor state
-    var me     = cells[i];     // Current state
-    var right  = cells[i+1];   // Right neighbor state
-    nextgen[i] = rules(left, me, right); // Compute next generation state based on ruleset
-  }
-  // The current generation is the new generation
-  this.cells = nextgen;
-  this.generation++;
+  var w = 50;
 
-// This is the easy part, just draw the cells
-function display() {
-  for (var i = 0; i < cells.length; i++) {
-    if (cells[i] == 1) {
-      fill(255)
-    } else if (cells[i] == 0) {
-      if (Math.random() <= art){
-        fill(125)
-        noStroke();
-        triangle(i*w, generation*w+50, i*w+25, generation*w, i*w+50, generation*w+50);
+  creSlider.addEventListener("change", function(){
+      if (cells[creSlider.value] === 0 ) {
+      cells[creSlider.value] = 1
       } else {
-        fill(0)
-        noStroke();
-        rect(i*w, generation*w, w, w);
+      cells[creSlider.value] = 0
       }
-    } else {
-      fill (125);
-      noStroke();
-      rect(i*w, generation*w, w, w);
+      console.log(cells);
+  });
+
+
+  //generate a blank all 0s matrix
+  function generateMatrix(){
+    for (var i = 0; i < cells.length; i++){
+      //create a row
+      //the row is [0,0,0,0,0,0,0,0]
+      matrix.push([0,0,0,0,0,0,0,0,0]);
     }
   }
-};
+  generateMatrix();
 
-// Implementing the Wolfram rules
-// Could be improved and made more concise, but here we can explicitly see what is going on for each case
-function rules(a, b, c) {
-  if (a == 1 && b == 1 && c == 1) return ruleset[0];
-  if (a == 1 && b == 1 && c === 0) return ruleset[1];
-  if (a == 1 && b === 0 && c == 1) return ruleset[2];
-  if (a == 1 && b === 0 && c === 0) return ruleset[3];
-  if (a === 0 && b == 1 && c == 1) return ruleset[4];
-  if (a === 0 && b == 1 && c === 0) return ruleset[5];
-  if (a === 0 && b === 0 && c == 1) return ruleset[6];
-  if (a === 0 && b === 0 && c === 0) return ruleset[7];
-  return 0;
-};
-display();
-}
+  function wolfRamize(cells, matrix){
+    //take the existing matrix
+    //and then apply the wolfram cellular automaton
+    //cellular automaton based on Shiffman's book The Nature of Code http://natureofcode.com/
 
-//slider fuctions
-//set the aspect of the slider
-function setSlider(slider){
-  slider.position(10, 10);
-  slider.style('width', '80px');
-}
+    wolfMatrix = matrix.slice();
+
+    for (var i = 0; i < wolfMatrix[0].length; i++){
+      wolfMatrix[0][i] = cells[i]
+    }
+    //for every row, start from the 1 row not 0
+    for (var i = 1; i < wolfMatrix.length -1; i++){
+      //For every spot, determine new state by examing current state, and neighbor states
+      //Ignore edges that only have one neighor
+      for (var j = 1; j < wolfMatrix[0].length-1; j++) {
+        var left   = wolfMatrix[i-1][j-1];   // Left neighbor state
+        var me     = wolfMatrix[i-1][j];     // Current state
+        var right  = wolfMatrix[i-1][j+1];   // Right neighbor state
+        //update the wolfMatrix state with wolframized cells
+        wolfMatrix[i][j] = rules(left, me, right);
+    }
+    }
+    return wolfMatrix;
+  }
+
+  function rules(a, b, c) {
+    if (a == 1 && b == 1 && c == 1) return ruleset[0];
+    if (a == 1 && b == 1 && c === 0) return ruleset[1];
+    if (a == 1 && b === 0 && c == 1) return ruleset[2];
+    if (a == 1 && b === 0 && c === 0) return ruleset[3];
+    if (a === 0 && b == 1 && c == 1) return ruleset[4];
+    if (a === 0 && b == 1 && c === 0) return ruleset[5];
+    if (a === 0 && b === 0 && c == 1) return ruleset[6];
+    if (a === 0 && b === 0 && c === 0) return ruleset[7];
+    return 0;
+  };
+
+  //what to draw
+
+  //p5.js main
+  var s = function( p ) {
+
+    function display(matrix) {
+      for (var i = 0; i < matrix.length -2; i++) {
+        for (var j = 0; j < matrix[0].length; j++){
+        if (matrix[i][j] == 1) {
+          p.fill(255)
+        } else if (matrix[i][j] == 0) {
+            p.fill(0)
+            p.noStroke();
+            p.rect(j*w, i*w, w, w);
+          } else {
+          p.fill (125);
+          p.noStroke();
+          p.rect(j*w, i*w, w, w);
+        }
+      }
+      }
+    };
+
+  p.setup = function() {
+    p.createCanvas(800, 800);
+    p.stroke(255);
+    p.noFill();
+  };
+
+  p.draw = function() {
+    p.clear();
+    display(wolfRamize(cells, matrix));
+  };
+};
+var myp5 = new p5(s, 'sketch-holder');
+
+});
