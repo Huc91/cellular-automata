@@ -7,16 +7,18 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-function debug(){
-var bmt = [[0,2,0,0,2,0,2,0,0],
-[0,0,0,0,0,0,0,0,0],
-[0,0,2,0,2,2,0,0,0],
-[0,0,2,2,2,0,0,0,0],
-[0,2,0,0,0,2,0,0,0],
-[0,2,0,2,0,0,0,0,0],
-[0,0,2,1,0,0,0,0,0],
-[0,0,0,0,0,2,0,0,0]];
-return bmt;
+function debug() {
+  var bmt = [
+    [0, 2, 0, 0, 2, 0, 2, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 2, 0, 2, 2, 0, 0, 0],
+    [0, 0, 2, 2, 2, 0, 0, 0, 0],
+    [0, 2, 0, 0, 0, 2, 0, 0, 0],
+    [0, 2, 0, 2, 0, 0, 0, 0, 0],
+    [0, 0, 2, 1, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 2, 0, 0, 0]
+  ];
+  return bmt;
 }
 //***************************
 
@@ -25,10 +27,13 @@ return bmt;
 document.addEventListener("DOMContentLoaded", function() {
   //sliders
   //creSlider -> slider to add cells
-  var creSlider = document.getElementById('creSlider'),
-      emoslider = document.getElementById('emoSlider');
-  console.log('cre: ' + creSlider.value + ' emo: ' + emoslider.value);
   //emoSlider -> slider connected to emotions, add grayscale
+  //effSlider -> slider to swap cells into 0, 1 graphically
+  var creSlider = document.getElementById('creSlider'),
+      emoSlider = document.getElementById('emoSlider'),
+      effSlider = document.getElementById('effSlider'),
+      alcSlider = document.getElementById('alcSlider');
+
 
   var cells = [1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0];
 
@@ -52,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   //adding colors:
   //write outside the draw() a function to add colors.
-  //if there is a parameter different from 0 on the emoslider then add colors.
+  //if there is a parameter different from 0 on the emoSlider then add colors.
 
 
   //generate a blank all 0s matrix
@@ -85,9 +90,8 @@ document.addEventListener("DOMContentLoaded", function() {
         var right  = wolfMatrix[i-1][j+1];   // Right neighbor state
         //update the wolfMatrix state with wolframized cells
         wolfMatrix[i][j] = rules(left, me, right);
+      }
     }
-    }
-
     return wolfMatrix;
   }
 
@@ -105,21 +109,35 @@ document.addEventListener("DOMContentLoaded", function() {
 
   //what to draw
 
-  //p5.js main
+  //p5.js main. In instance mode
+  //https://github.com/processing/p5.js/wiki/Global-and-instance-mode
+  //that's why a use that "weird" p  before p5.js methods
   var s = function( p ) {
+    //about loop & noLoop: https://p5js.org/reference/#/p5/noLoop
+    // I used them to stop and restart the draw fuction
+    //otherwise it will loop continuosly as defined in the p5.js library
+
+    // -------o------- sliders change callback function:
+    //creative
     creSlider.addEventListener("change", function(){
         if (cells[creSlider.value] === 0 ) {
-        cells[creSlider.value] = 1
+          cells[creSlider.value] = 1
         } else {
-        cells[creSlider.value] = 0
+          cells[creSlider.value] = 0
         }
-        console.log(cells);
-        p.loop();
-    });
-    emoslider.addEventListener("change", function(){
+      console.log(cells);
       p.loop();
     });
-    //what to draw
+    //emotion
+    emoSlider.addEventListener("change", function(){
+      p.loop();
+    });
+    //efficiency
+    effSlider.addEventListener("change", function(){
+      p.loop();
+    });
+
+    //what to display in the draw function
     function display(matrix) {
       console.log('display');
       console.log(matrix);
@@ -129,24 +147,39 @@ document.addEventListener("DOMContentLoaded", function() {
         for (var j = 0; j < matrix[0].length; j++){
           //if 1 = white square (inverted)
           if (matrix[i][j] === 1) {
-            p.fill(255)
-            p.noStroke();
-            p.rect(j*w, i*w, w, w);
-          } else if (matrix[i][j] === 0) {
-              if (getRandomInt(8) <= emoslider.value){
-                p.fill(0 + 28*getRandomInt(emoslider.value))
+            if (getRandomInt(32)+1 <= effSlider.value) {
+              p.fill(255)
+              p.noStroke();
+              p.rect(j*w, i*w, w, w);
+              p.fill(0);
+              p.textSize(w*0.5);
+              p.textFont('Space Mono');
+              p.textAlign(p.CENTER, p.CENTER);
+              p.text(' 1', j*w, i*w, w, w);
+            } else {
+              p.fill(255)
+              p.noStroke();
+              p.rect(j*w, i*w, w, w);
+            }
+          } else {
+              if (getRandomInt(16) <= emoSlider.value){
+                p.fill(0 + 28*getRandomInt(emoSlider.value))
                 p.noStroke();
                 p.rect(j*w, i*w, w, w);
-              } else {
+              } else if (getRandomInt(32)+1 <= effSlider.value) {
+                p.fill(255)
+                p.noStroke();
+                p.rect(j*w, i*w, w, w);
+                p.fill(0);
+                p.textSize(w*0.5);
+                p.textFont('Space Mono');
+                p.textAlign(p.CENTER, p.CENTER);
+                p.text(' 0', j*w, i*w, w, w);
+              } else  {
                 p.fill(0)
                 p.noStroke();
                 p.rect(j*w, i*w, w, w);
               }
-          } else {
-            //emotion parameter
-              p.fill(255*Math.random())
-              p.noStroke();
-              p.rect(j*w, i*w, w, w);
           }
         }
       }
@@ -154,10 +187,12 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
   p.setup = function() {
-    p.createCanvas(800, 800);
+    p.createCanvas(800, 500);
     p.stroke(255);
     p.noFill();
     //p.noLoop(); //draw doesn't loop
+
+
   };
 
   p.draw = function() {
@@ -166,6 +201,36 @@ document.addEventListener("DOMContentLoaded", function() {
     //else
     //pass wolfRamize(cells, matrix)
     display(wolfRamize(cells, matrix));
+    //brand typography
+    //all center
+    /*
+    p.fill(0)
+    p.noStroke();
+    p.rect(0, w*3, w*9, w*3);
+    p.fill(255);
+    p.textSize(w*1.5);
+    p.textFont('Space Mono');
+    p.textAlign(p.CENTER, p.CENTER);
+    p.text('U – A', 0, w*3, w*10, w*2);
+    p.textSize(w*0.66);
+    p.text('umanesimo artificiale', 0, w*5, w*10, w*1);
+    */
+    /*
+    p.fill(255)
+    p.stroke(0)
+
+    p.rect(0, 0, w*4, w*2);
+    p.fill(0);
+    p.textSize(w);
+    p.noStroke();
+    p.textFont('Space Mono');
+    p.textAlign(p.LEFT, p.TOP);
+    p.text('U – A', 0, 0, w*4, w*2);
+    p.textSize(w*0.33);
+    p.textAlign(p.LEFT, p.CENTER);
+    p.text('umanesimo artificiale', 0, w*1, w*5, w*1);
+    */
+
   };
 };
 var myp5 = new p5(s, 'sketch-holder');
