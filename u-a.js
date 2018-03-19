@@ -1,10 +1,34 @@
 //logo generator for U - A Umanesimo Artificiale
 //author: Luca Ucciero
 
+//bug test
+//***************************
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+function debug(){
+var bmt = [[0,2,0,0,2,0,2,0,0],
+[0,0,0,0,0,0,0,0,0],
+[0,0,2,0,2,2,0,0,0],
+[0,0,2,2,2,0,0,0,0],
+[0,2,0,0,0,2,0,0,0],
+[0,2,0,2,0,0,0,0,0],
+[0,0,2,1,0,0,0,0,0],
+[0,0,0,0,0,2,0,0,0]];
+return bmt;
+}
+//***************************
+
+//code
+
 document.addEventListener("DOMContentLoaded", function() {
   //sliders
-  var creSlider = document.getElementById('creSlider');
-  console.log(creSlider.value);
+  //creSlider -> slider to add cells
+  var creSlider = document.getElementById('creSlider'),
+      emoslider = document.getElementById('emoSlider');
+  console.log('cre: ' + creSlider.value + ' emo: ' + emoslider.value);
+  //emoSlider -> slider connected to emotions, add grayscale
 
   var cells = [1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0];
 
@@ -26,14 +50,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
   var w = 50;
 
-  creSlider.addEventListener("change", function(){
-      if (cells[creSlider.value] === 0 ) {
-      cells[creSlider.value] = 1
-      } else {
-      cells[creSlider.value] = 0
-      }
-      console.log(cells);
-  });
+  //adding colors:
+  //write outside the draw() a function to add colors.
+  //if there is a parameter different from 0 on the emoslider then add colors.
 
 
   //generate a blank all 0s matrix
@@ -68,6 +87,7 @@ document.addEventListener("DOMContentLoaded", function() {
         wolfMatrix[i][j] = rules(left, me, right);
     }
     }
+
     return wolfMatrix;
   }
 
@@ -87,33 +107,64 @@ document.addEventListener("DOMContentLoaded", function() {
 
   //p5.js main
   var s = function( p ) {
-
+    creSlider.addEventListener("change", function(){
+        if (cells[creSlider.value] === 0 ) {
+        cells[creSlider.value] = 1
+        } else {
+        cells[creSlider.value] = 0
+        }
+        console.log(cells);
+        p.loop();
+    });
+    emoslider.addEventListener("change", function(){
+      p.loop();
+    });
+    //what to draw
     function display(matrix) {
-      for (var i = 0; i < matrix.length -2; i++) {
+      console.log('display');
+      console.log(matrix);
+      //draw the matrix
+      // i like it with inverted colors
+      for (var i = 0; i < matrix.length; i++) {
         for (var j = 0; j < matrix[0].length; j++){
-        if (matrix[i][j] == 1) {
-          p.fill(255)
-        } else if (matrix[i][j] == 0) {
-            p.fill(0)
+          //if 1 = white square (inverted)
+          if (matrix[i][j] === 1) {
+            p.fill(255)
             p.noStroke();
             p.rect(j*w, i*w, w, w);
+          } else if (matrix[i][j] === 0) {
+              if (getRandomInt(8) <= emoslider.value){
+                p.fill(0 + 28*getRandomInt(emoslider.value))
+                p.noStroke();
+                p.rect(j*w, i*w, w, w);
+              } else {
+                p.fill(0)
+                p.noStroke();
+                p.rect(j*w, i*w, w, w);
+              }
           } else {
-          p.fill (125);
-          p.noStroke();
-          p.rect(j*w, i*w, w, w);
+            //emotion parameter
+              p.fill(255*Math.random())
+              p.noStroke();
+              p.rect(j*w, i*w, w, w);
+          }
         }
       }
-      }
+      p.noLoop()
     };
 
   p.setup = function() {
     p.createCanvas(800, 800);
     p.stroke(255);
     p.noFill();
+    //p.noLoop(); //draw doesn't loop
   };
 
   p.draw = function() {
     p.clear();
+    //pass deubg() to test
+    //else
+    //pass wolfRamize(cells, matrix)
     display(wolfRamize(cells, matrix));
   };
 };
