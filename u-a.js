@@ -1,12 +1,10 @@
 //logo generator for U - A Umanesimo Artificiale
 //author: Luca Ucciero
 
+
+
 //bug test
 //***************************
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
-
 function debug() {
   var bmt = [
     [0, 2, 0, 0, 2, 0, 2, 0, 0],
@@ -24,6 +22,10 @@ function debug() {
 
 //code
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   //sliders
   //creSlider -> slider to add cells
@@ -34,25 +36,26 @@ document.addEventListener("DOMContentLoaded", function() {
       effSlider = document.getElementById('effSlider'),
       alcSlider = document.getElementById('alcSlider');
 
+  //I'll use it to get a click/tap event on the canvas
+  var matContainer = document.getElementById('sketch-holder');
 
   var cells = [1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0];
 
   var matrix = [];
 
   //from "Tables of Cellular Automaton Properties" paper, 1986
-  var rulesList = {
-    rule_1:   [0, 0, 0, 0, 0, 0, 0, 1],
-    rule_11:  [0, 0, 0, 0, 1, 0, 1, 1],
-    rule_18:  [0, 0, 0, 1, 0, 0, 1, 0],
-    rule_19:  [0, 0, 0, 1, 0, 0, 1, 1],
-    rule_57:  [1, 0, 0, 0, 0 ,0, 0, 0],
-    rule_73:  [0, 1, 0, 0, 1, 0, 0, 1],
-    rule_105: [0, 1, 1, 0, 1, 0, 0, 1],
-    rule_110: [0, 1, 1, 0, 1, 1, 1, 0]
-  }
+  var rulesList = [
+    ['rule_1',   [0, 0, 0, 0, 0, 0, 0, 1]],
+    ['rule_11',  [0, 0, 0, 0, 1, 0, 1, 1]],
+    ['rule_18',  [0, 0, 0, 1, 0, 0, 1, 0]],
+    ['rule_19',  [0, 0, 0, 1, 0, 0, 1, 1]],
+    ['rule_57',  [1, 0, 0, 0, 0 ,0, 0, 0]],
+    ['rule_73',  [0, 1, 0, 0, 1, 0, 0, 1]],
+    ['rule_105', [0, 1, 1, 0, 1, 0, 0, 1]],
+    ['rule_110', [0, 1, 1, 0, 1, 1, 1, 0]]
+  ];
 
-  var ruleset = rulesList.rule_1;
-
+  var currentRule = 0;
   var w = 50;
 
   //adding colors:
@@ -76,6 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
     //cellular automaton based on Shiffman's book The Nature of Code http://natureofcode.com/
 
     wolfMatrix = matrix.slice();
+    var ruleset = rulesList[currentRule][1];
 
     for (var i = 0; i < wolfMatrix[0].length; i++){
       wolfMatrix[0][i] = cells[i]
@@ -92,20 +96,21 @@ document.addEventListener("DOMContentLoaded", function() {
         wolfMatrix[i][j] = rules(left, me, right);
       }
     }
+
+    function rules(a, b, c) {
+      if (a == 1 && b == 1 && c == 1) return ruleset[0];
+      if (a == 1 && b == 1 && c === 0) return ruleset[1];
+      if (a == 1 && b === 0 && c == 1) return ruleset[2];
+      if (a == 1 && b === 0 && c === 0) return ruleset[3];
+      if (a === 0 && b == 1 && c == 1) return ruleset[4];
+      if (a === 0 && b == 1 && c === 0) return ruleset[5];
+      if (a === 0 && b === 0 && c == 1) return ruleset[6];
+      if (a === 0 && b === 0 && c === 0) return ruleset[7];
+      return 0;
+    };
+
     return wolfMatrix;
   }
-
-  function rules(a, b, c) {
-    if (a == 1 && b == 1 && c == 1) return ruleset[0];
-    if (a == 1 && b == 1 && c === 0) return ruleset[1];
-    if (a == 1 && b === 0 && c == 1) return ruleset[2];
-    if (a == 1 && b === 0 && c === 0) return ruleset[3];
-    if (a === 0 && b == 1 && c == 1) return ruleset[4];
-    if (a === 0 && b == 1 && c === 0) return ruleset[5];
-    if (a === 0 && b === 0 && c == 1) return ruleset[6];
-    if (a === 0 && b === 0 && c === 0) return ruleset[7];
-    return 0;
-  };
 
   //what to draw
 
@@ -118,7 +123,10 @@ document.addEventListener("DOMContentLoaded", function() {
     //otherwise it will loop continuosly as defined in the p5.js library
 
     // -------o------- sliders change callback function:
+
     //creative
+    //old one
+    /*
     creSlider.addEventListener("change", function(){
         if (cells[creSlider.value] === 0 ) {
           cells[creSlider.value] = 1
@@ -128,6 +136,25 @@ document.addEventListener("DOMContentLoaded", function() {
       console.log(cells);
       p.loop();
     });
+    */
+    //creative
+    //new one
+    creSlider.addEventListener("change", function(){
+        //get the actual rule applied
+        // go to the next one if the value is > than current index
+      if (creSlider.value > currentRule && currentRule >= 0 && currentRule < rulesList.length ) {
+        currentRule = currentRule + 1
+        console.log(rulesList[currentRule][0]);
+        // otherwise if the value is < than current index go to the previous
+      } else if (creSlider.value < currentRule && currentRule > 0 && currentRule <= rulesList.length ) {
+          currentRule = currentRule - 1
+          console.log(rulesList[currentRule][0]);
+      } else {
+        console.log('you should not see this');
+      }
+      p.loop();
+    });
+
     //emotion
     emoSlider.addEventListener("change", function(){
       p.loop();
@@ -161,6 +188,7 @@ document.addEventListener("DOMContentLoaded", function() {
               p.noStroke();
               p.rect(j*w, i*w, w, w);
             }
+            //if 0 = black square (inverted)
           } else {
               if (getRandomInt(16) <= emoSlider.value){
                 p.fill(0 + 28*getRandomInt(emoSlider.value))
