@@ -1,12 +1,10 @@
 //logo generator for U - A Umanesimo Artificiale
 //author: Luca Ucciero
 
+
+
 //bug test
 //***************************
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
-
 function debug() {
   var bmt = [
     [0, 2, 0, 0, 2, 0, 2, 0, 0],
@@ -24,6 +22,10 @@ function debug() {
 
 //code
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   //sliders
   //creSlider -> slider to add cells
@@ -34,6 +36,8 @@ document.addEventListener("DOMContentLoaded", function() {
       effSlider = document.getElementById('effSlider'),
       alcSlider = document.getElementById('alcSlider');
 
+  //I'll use it to get a click/tap event on the canvas
+  var matContainer = document.getElementById('sketch-holder');
 
   var cells = [1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0];
 
@@ -51,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function() {
     rule_110: [0, 1, 1, 0, 1, 1, 1, 0]
   }
 
-  var ruleset = rulesList.rule_1;
+  var ruleset = rulesList.rule_105;
 
   var w = 50;
 
@@ -118,7 +122,10 @@ document.addEventListener("DOMContentLoaded", function() {
     //otherwise it will loop continuosly as defined in the p5.js library
 
     // -------o------- sliders change callback function:
+
     //creative
+    //old one
+    /*
     creSlider.addEventListener("change", function(){
         if (cells[creSlider.value] === 0 ) {
           cells[creSlider.value] = 1
@@ -128,6 +135,21 @@ document.addEventListener("DOMContentLoaded", function() {
       console.log(cells);
       p.loop();
     });
+    */
+    //creative
+    //new one
+    creSlider.addEventListener("change", function(){
+        //get the actual rule applied
+        // go to the next one if the value is > than current index
+        if (cells[creSlider.value] === 0 ) {
+          cells[creSlider.value] = 1
+        // otherwise if the value is < than current index go to the previous 
+        } else {
+          cells[creSlider.value] = 0
+        }
+      p.loop();
+    });
+
     //emotion
     emoSlider.addEventListener("change", function(){
       p.loop();
@@ -161,6 +183,7 @@ document.addEventListener("DOMContentLoaded", function() {
               p.noStroke();
               p.rect(j*w, i*w, w, w);
             }
+            //if 0 = black square (inverted)
           } else {
               if (getRandomInt(16) <= emoSlider.value){
                 p.fill(0 + 28*getRandomInt(emoSlider.value))
