@@ -44,19 +44,18 @@ document.addEventListener("DOMContentLoaded", function() {
   var matrix = [];
 
   //from "Tables of Cellular Automaton Properties" paper, 1986
-  var rulesList = {
-    rule_1:   [0, 0, 0, 0, 0, 0, 0, 1],
-    rule_11:  [0, 0, 0, 0, 1, 0, 1, 1],
-    rule_18:  [0, 0, 0, 1, 0, 0, 1, 0],
-    rule_19:  [0, 0, 0, 1, 0, 0, 1, 1],
-    rule_57:  [1, 0, 0, 0, 0 ,0, 0, 0],
-    rule_73:  [0, 1, 0, 0, 1, 0, 0, 1],
-    rule_105: [0, 1, 1, 0, 1, 0, 0, 1],
-    rule_110: [0, 1, 1, 0, 1, 1, 1, 0]
-  }
+  var rulesList = [
+    ['rule_1',   [0, 0, 0, 0, 0, 0, 0, 1]],
+    ['rule_11',  [0, 0, 0, 0, 1, 0, 1, 1]],
+    ['rule_18',  [0, 0, 0, 1, 0, 0, 1, 0]],
+    ['rule_19',  [0, 0, 0, 1, 0, 0, 1, 1]],
+    ['rule_57',  [1, 0, 0, 0, 0 ,0, 0, 0]],
+    ['rule_73',  [0, 1, 0, 0, 1, 0, 0, 1]],
+    ['rule_105', [0, 1, 1, 0, 1, 0, 0, 1]],
+    ['rule_110', [0, 1, 1, 0, 1, 1, 1, 0]]
+  ];
 
-  var ruleset = rulesList.rule_105;
-
+  var currentRule = 0;
   var w = 50;
 
   //adding colors:
@@ -80,6 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
     //cellular automaton based on Shiffman's book The Nature of Code http://natureofcode.com/
 
     wolfMatrix = matrix.slice();
+    var ruleset = rulesList[currentRule][1];
 
     for (var i = 0; i < wolfMatrix[0].length; i++){
       wolfMatrix[0][i] = cells[i]
@@ -96,20 +96,21 @@ document.addEventListener("DOMContentLoaded", function() {
         wolfMatrix[i][j] = rules(left, me, right);
       }
     }
+
+    function rules(a, b, c) {
+      if (a == 1 && b == 1 && c == 1) return ruleset[0];
+      if (a == 1 && b == 1 && c === 0) return ruleset[1];
+      if (a == 1 && b === 0 && c == 1) return ruleset[2];
+      if (a == 1 && b === 0 && c === 0) return ruleset[3];
+      if (a === 0 && b == 1 && c == 1) return ruleset[4];
+      if (a === 0 && b == 1 && c === 0) return ruleset[5];
+      if (a === 0 && b === 0 && c == 1) return ruleset[6];
+      if (a === 0 && b === 0 && c === 0) return ruleset[7];
+      return 0;
+    };
+
     return wolfMatrix;
   }
-
-  function rules(a, b, c) {
-    if (a == 1 && b == 1 && c == 1) return ruleset[0];
-    if (a == 1 && b == 1 && c === 0) return ruleset[1];
-    if (a == 1 && b === 0 && c == 1) return ruleset[2];
-    if (a == 1 && b === 0 && c === 0) return ruleset[3];
-    if (a === 0 && b == 1 && c == 1) return ruleset[4];
-    if (a === 0 && b == 1 && c === 0) return ruleset[5];
-    if (a === 0 && b === 0 && c == 1) return ruleset[6];
-    if (a === 0 && b === 0 && c === 0) return ruleset[7];
-    return 0;
-  };
 
   //what to draw
 
@@ -141,12 +142,16 @@ document.addEventListener("DOMContentLoaded", function() {
     creSlider.addEventListener("change", function(){
         //get the actual rule applied
         // go to the next one if the value is > than current index
-        if (cells[creSlider.value] === 0 ) {
-          cells[creSlider.value] = 1
-        // otherwise if the value is < than current index go to the previous 
-        } else {
-          cells[creSlider.value] = 0
-        }
+      if (creSlider.value > currentRule && currentRule >= 0 && currentRule < rulesList.length ) {
+        currentRule = currentRule + 1
+        console.log(rulesList[currentRule][0]);
+        // otherwise if the value is < than current index go to the previous
+      } else if (creSlider.value < currentRule && currentRule > 0 && currentRule <= rulesList.length ) {
+          currentRule = currentRule - 1
+          console.log(rulesList[currentRule][0]);
+      } else {
+        console.log('you should not see this');
+      }
       p.loop();
     });
 
