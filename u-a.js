@@ -203,15 +203,17 @@ document.addEventListener("DOMContentLoaded", function() {
         for (var j = 0; j < matrix[0].length; j++){
           //if 1 = white square (inverted)
           if (matrix[i][j] === 1) {
+            //add ones efficiency
             if (getRandomInt(32)+1 <= effSlider.value) {
               p.fill(255)
               p.noStroke();
               p.rect(j*w, i*w, w, w);
-              p.fill(0);
+              p.fill(255);
               p.textSize(w*0.5);
               p.textFont('Space Mono');
               p.textAlign(p.CENTER, p.CENTER);
               p.text(' 1', j*w, i*w, w, w);
+              //add polygon immortality
             } else if (getRandomInt(16) < alcSlider.value) {
               p.fill(0)
               p.noStroke();
@@ -220,6 +222,7 @@ document.addEventListener("DOMContentLoaded", function() {
               p.stroke(0);
               p.fill(255);
               polygon((j*w)+(w/2), (i*w)+(w/2), w*0.5, alcSlider.value);
+              //add normal white squares
             } else {
               p.fill(255)
               p.noStroke();
@@ -227,19 +230,25 @@ document.addEventListener("DOMContentLoaded", function() {
             }
             //if 0 = black square (inverted)
           } else {
-              if (getRandomInt(16) <= emoSlider.value){
-                p.fill(0 + 28*getRandomInt(emoSlider.value))
+            //add greyscale or color emotion
+              if (getRandomInt(16)+1 <= emoSlider.value){
+                //greyscale
+                //p.fill(0 + 28*getRandomInt(emoSlider.value))
+                //color: violet: #A500FD | green: #79EFCB
+                p.fill('#7233DA');
                 p.noStroke();
                 p.rect(j*w, i*w, w, w);
+                //add zeros efficiency
               } else if (getRandomInt(32)+1 <= effSlider.value) {
                 p.fill(255)
                 p.noStroke();
                 p.rect(j*w, i*w, w, w);
-                p.fill(0);
+                p.fill(255);
                 p.textSize(w*0.5);
                 p.textFont('Space Mono');
                 p.textAlign(p.CENTER, p.CENTER);
                 p.text(' 0', j*w, i*w, w, w);
+                //add normal black square
               } else  {
                 p.fill(0)
                 p.noStroke();
@@ -267,34 +276,15 @@ document.addEventListener("DOMContentLoaded", function() {
     //pass wolfRamize(cells, matrix)
     display(wolfRamize(cells, matrix));
     //brand typography
-    //all center
-    /*
-    p.fill(0)
-    p.noStroke();
-    p.rect(0, w*3, w*9, w*3);
-    p.fill(255);
-    p.textSize(w*1.5);
-    p.textFont('Space Mono');
-    p.textAlign(p.CENTER, p.CENTER);
-    p.text('U – A', 0, w*3, w*10, w*2);
-    p.textSize(w*0.66);
-    p.text('umanesimo artificiale', 0, w*5, w*10, w*1);
-    */
-    /*
+    //top & bottom text with blend mode difference
     p.fill(255)
-    p.stroke(0)
-
-    p.rect(0, 0, w*4, w*2);
-    p.fill(0);
-    p.textSize(w);
-    p.noStroke();
-    p.textFont('Space Mono');
-    p.textAlign(p.LEFT, p.TOP);
-    p.text('U – A', 0, 0, w*4, w*2);
-    p.textSize(w*0.33);
+    p.blendMode(p.DIFFERENCE);
+    p.textSize(w*1.45);
+    p.textFont('Work Sans');
     p.textAlign(p.LEFT, p.CENTER);
-    p.text('umanesimo artificiale', 0, w*1, w*5, w*1);
-    */
+    p.text('UMANESIMO', 0, 0, w*10, w*2);
+    p.text('ARTIFICIALE', 0, w*7, w*10, w*2);
+
 
   };
 };
