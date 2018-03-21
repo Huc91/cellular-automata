@@ -1,0 +1,14 @@
+body {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 16px;
+}
+
+.slider {
+  display: flex;
+  justify-content: flex-start;
+  padding: 4px;
+}
+
+.slider-label {
+  width: 100px;
+}
