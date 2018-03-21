@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", function() {
   var creSlider = document.getElementById('creSlider'),
       emoSlider = document.getElementById('emoSlider'),
       effSlider = document.getElementById('effSlider'),
-      alcSlider = document.getElementById('alcSlider');
+      alcSlider = document.getElementById('alcSlider'),
+      zerSlider = document.getElementById('zerSlider');
 
   //I'll use it to get a click/tap event on the canvas
   var matContainer = document.getElementById('sketch-holder');
@@ -49,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
     ['rule_11',  [0, 0, 0, 0, 1, 0, 1, 1]],
     ['rule_18',  [0, 0, 0, 1, 0, 0, 1, 0]],
     ['rule_19',  [0, 0, 0, 1, 0, 0, 1, 1]],
-    ['rule_57',  [1, 0, 0, 0, 0 ,0, 0, 0]],
+    ['rule_43',  [0, 0, 1, 0, 1 ,0, 1, 1]],
     ['rule_73',  [0, 1, 0, 0, 1, 0, 0, 1]],
     ['rule_105', [0, 1, 1, 0, 1, 0, 0, 1]],
     ['rule_110', [0, 1, 1, 0, 1, 1, 1, 0]]
@@ -124,19 +125,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // -------o------- sliders change callback function:
 
-    //creative
-    //old one
-    /*
-    creSlider.addEventListener("change", function(){
-        if (cells[creSlider.value] === 0 ) {
-          cells[creSlider.value] = 1
+    //generation zero slider
+    zerSlider.addEventListener("change", function(){
+        if (cells[zerSlider.value] === 0 ) {
+          cells[zerSlider.value] = 1
         } else {
-          cells[creSlider.value] = 0
+          cells[zerSlider.value] = 0
         }
       console.log(cells);
       p.loop();
     });
-    */
     //creative
     //new one
     // change ruleset on slide
@@ -172,13 +170,13 @@ document.addEventListener("DOMContentLoaded", function() {
     //create polygon fuction
     function polygon(x, y, radius, slidevalue) {
       console.log('slidevalue' + slidevalue);
-      if (slidevalue == 0 || slidevalue == 1 ){
+      if (slidevalue == 1 || slidevalue == 2 ){
         var npoints = 4;
-      } else if (slidevalue == 2 || slidevalue == 3 ){
+      } else if (slidevalue == 3 || slidevalue == 4 ){
         var npoints = 4+2;
-      } else if (slidevalue == 4 || slidevalue == 5 ){
+      } else if (slidevalue == 5 || slidevalue == 6 ){
         var npoints = 4+4;
-      } else if (slidevalue == 6 || slidevalue == 7 ){
+      } else if (slidevalue == 7 || slidevalue == 8 ){
         var npoints = 4+8;
       } else {
         var npoints = 4+30;
@@ -214,12 +212,13 @@ document.addEventListener("DOMContentLoaded", function() {
               p.textFont('Space Mono');
               p.textAlign(p.CENTER, p.CENTER);
               p.text(' 1', j*w, i*w, w, w);
-            } else if (getRandomInt(16) <= alcSlider.value) {
-              p.fill(255)
+            } else if (getRandomInt(16) < alcSlider.value) {
+              p.fill(0)
               p.noStroke();
               p.rect(j*w, i*w, w, w);
-              p.strokeWeight(4);
+              p.strokeWeight(0);
               p.stroke(0);
+              p.fill(255);
               polygon((j*w)+(w/2), (i*w)+(w/2), w*0.5, alcSlider.value);
             } else {
               p.fill(255)
