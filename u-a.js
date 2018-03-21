@@ -139,6 +139,7 @@ document.addEventListener("DOMContentLoaded", function() {
     */
     //creative
     //new one
+    // change ruleset on slide
     creSlider.addEventListener("change", function(){
         //get the actual rule applied
         // go to the next one if the value is > than current index
@@ -163,6 +164,36 @@ document.addEventListener("DOMContentLoaded", function() {
     effSlider.addEventListener("change", function(){
       p.loop();
     });
+    //immortality
+    alcSlider.addEventListener("change", function(){
+      p.loop();
+    });
+
+    //create polygon fuction
+    function polygon(x, y, radius, slidevalue) {
+      console.log('slidevalue' + slidevalue);
+      if (slidevalue == 0 || slidevalue == 1 ){
+        var npoints = 4;
+      } else if (slidevalue == 2 || slidevalue == 3 ){
+        var npoints = 4+2;
+      } else if (slidevalue == 4 || slidevalue == 5 ){
+        var npoints = 4+4;
+      } else if (slidevalue == 6 || slidevalue == 7 ){
+        var npoints = 4+8;
+      } else {
+        var npoints = 4+30;
+      }
+
+      console.log('npoint' + npoints);
+      var angle = p.TWO_PI / npoints;
+      p.beginShape();
+      for (var a = 0; a < p.TWO_PI; a += angle) {
+        var sx = x + p.cos(a) * radius;
+        var sy = y + p.sin(a) * radius;
+        p.vertex(sx, sy);
+      }
+      p.endShape(p.CLOSE);
+    }
 
     //what to display in the draw function
     function display(matrix) {
@@ -183,6 +214,13 @@ document.addEventListener("DOMContentLoaded", function() {
               p.textFont('Space Mono');
               p.textAlign(p.CENTER, p.CENTER);
               p.text(' 1', j*w, i*w, w, w);
+            } else if (getRandomInt(16) <= alcSlider.value) {
+              p.fill(255)
+              p.noStroke();
+              p.rect(j*w, i*w, w, w);
+              p.strokeWeight(4);
+              p.stroke(0);
+              polygon((j*w)+(w/2), (i*w)+(w/2), w*0.5, alcSlider.value);
             } else {
               p.fill(255)
               p.noStroke();
