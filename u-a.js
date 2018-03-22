@@ -126,11 +126,11 @@ document.addEventListener("DOMContentLoaded", function() {
     // -------o------- sliders change callback function:
 
     //generation zero slider
-    zerSlider.addEventListener("change", function(){
-        if (cells[zerSlider.value] === 0 ) {
-          cells[zerSlider.value] = 1
+    creSlider.addEventListener("input", function(){
+        if (cells[creSlider.value] === 0 ) {
+          cells[creSlider.value] = 1
         } else {
-          cells[zerSlider.value] = 0
+          cells[creSlider.value] = 0
         }
       console.log(cells);
       p.loop();
@@ -138,14 +138,14 @@ document.addEventListener("DOMContentLoaded", function() {
     //creative
     //new one
     // change ruleset on slide
-    creSlider.addEventListener("change", function(){
+    zerSlider.addEventListener("input", function(){
         //get the actual rule applied
         // go to the next one if the value is > than current index
-      if (creSlider.value > currentRule && currentRule >= 0 && currentRule < rulesList.length ) {
+      if (zerSlider.value > currentRule && currentRule >= 0 && currentRule < rulesList.length ) {
         currentRule = currentRule + 1
         console.log(rulesList[currentRule][0]);
         // otherwise if the value is < than current index go to the previous
-      } else if (creSlider.value < currentRule && currentRule > 0 && currentRule <= rulesList.length ) {
+      } else if (zerSlider.value < currentRule && currentRule > 0 && currentRule <= rulesList.length ) {
           currentRule = currentRule - 1
           console.log(rulesList[currentRule][0]);
       } else {
@@ -155,15 +155,15 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     //emotion
-    emoSlider.addEventListener("change", function(){
+    emoSlider.addEventListener("input", function(){
       p.loop();
     });
     //efficiency
-    effSlider.addEventListener("change", function(){
+    effSlider.addEventListener("input", function(){
       p.loop();
     });
     //immortality
-    alcSlider.addEventListener("change", function(){
+    alcSlider.addEventListener("input", function(){
       p.loop();
     });
 
@@ -193,6 +193,21 @@ document.addEventListener("DOMContentLoaded", function() {
       p.endShape(p.CLOSE);
     }
 
+    //create lines pattern
+
+    function linePattern(x1, y1, w, density){
+      var increment = w/density;
+      for (var a = 1; a < density+1; a++) {
+        //line(x1,y1,x2,y2)
+        p.line(x1, y1+(a*increment), x1+(a*increment), y1)
+      }
+      for (var v = 1; v < density; v++) {
+        //line(x1,y1,x2,y2)
+        p.line(x1+(v*increment), y1+w, x1+w, y1+(v*increment))
+      }
+    }
+
+
     //what to display in the draw function
     function display(matrix) {
       console.log('display');
@@ -208,7 +223,7 @@ document.addEventListener("DOMContentLoaded", function() {
               p.fill(255)
               p.noStroke();
               p.rect(j*w, i*w, w, w);
-              p.fill(255);
+              p.fill(0);
               p.textSize(w*0.5);
               p.textFont('Space Mono');
               p.textAlign(p.CENTER, p.CENTER);
@@ -218,10 +233,11 @@ document.addEventListener("DOMContentLoaded", function() {
               p.fill(0)
               p.noStroke();
               p.rect(j*w, i*w, w, w);
-              p.strokeWeight(0);
-              p.stroke(0);
+              p.push()
+              p.noStroke();
               p.fill(255);
               polygon((j*w)+(w/2), (i*w)+(w/2), w*0.5, alcSlider.value);
+              p.pop();
               //add normal white squares
             } else {
               p.fill(255)
@@ -231,19 +247,29 @@ document.addEventListener("DOMContentLoaded", function() {
             //if 0 = black square (inverted)
           } else {
             //add greyscale or color emotion
-              if (getRandomInt(16)+1 <= emoSlider.value){
+              if (getRandomInt(16)+1 <= emoSlider.value && i > 1 && i < matrix.length - 2){
                 //greyscale
                 //p.fill(0 + 28*getRandomInt(emoSlider.value))
-                //color: violet: #A500FD | green: #79EFCB
-                p.fill('#7233DA');
+                //color: violet: #7233DA | green: #79EFCB | yellow: #FFCC00
+                p.fill('#FFCC00');
                 p.noStroke();
                 p.rect(j*w, i*w, w, w);
+                //add line pattern
+              } else if (getRandomInt(48)+1 <= creSlider.value) {
+                p.fill(0)
+                p.noStroke();
+                p.push();
+                p.rect(j*w, i*w, w, w);
+                p.stroke(255)
+                p.strokeWeight(2)
+                linePattern(j*w, i*w, w, 4)
+                p.pop();
                 //add zeros efficiency
               } else if (getRandomInt(32)+1 <= effSlider.value) {
                 p.fill(255)
                 p.noStroke();
                 p.rect(j*w, i*w, w, w);
-                p.fill(255);
+                p.fill(0);
                 p.textSize(w*0.5);
                 p.textFont('Space Mono');
                 p.textAlign(p.CENTER, p.CENTER);
@@ -277,6 +303,7 @@ document.addEventListener("DOMContentLoaded", function() {
     display(wolfRamize(cells, matrix));
     //brand typography
     //top & bottom text with blend mode difference
+    p.push()
     p.fill(255)
     p.blendMode(p.DIFFERENCE);
     p.textSize(w*1.45);
@@ -284,6 +311,7 @@ document.addEventListener("DOMContentLoaded", function() {
     p.textAlign(p.LEFT, p.CENTER);
     p.text('UMANESIMO', 0, 0, w*10, w*2);
     p.text('ARTIFICIALE', 0, w*7, w*10, w*2);
+    p.pop()
 
 
   };
