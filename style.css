@@ -1,31 +1,84 @@
+/*typography*/
 body {
   font-family: 'Work Sans', sans-serif;
+  height: 100%;
   font-size: 16px;
   background-color: #fafafa;
 }
 
+h1 {
+  font-size: 40px;
+  letter-spacing: -0.016em;
+  line-height: 56px;
+}
+
+
 /*layout*/
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/*land div*/
 
 #landing {
   width: 100vw;
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
   border: 1px solid black;
 }
 
-#main-holder {
-  width: 50%;
-  border: 1px solid red;
+/*land three child*/
+
+#quest-container {
+  width: 100%;
+  min-height: 16.66%;
+  background-color: #eee;
 }
+
+#quest-container h1 {
+  width: 50%;
+}
+
+#main-container {
+  width: 50%;
+  height: calc(100% - 16.66%);
+  border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#sketch-container {
+  width: 49%;
+  height: calc(100% - 16.66%);
+  border: 1px solid green;
+  display: flex;
+  flex-direction: column;
+}
+
+/*#sketch-container child*/
 
 #sketch-holder {
   width: 50%;
-  border: 1px solid green;
+  margin-top: 16.66%;
+  margin-left: 16.66%;
+  margin-right: 16.66%;
+  margin-bottom: 16.66%;
+  align-self: center;
+  border: 2px pink solid;
 }
+
+/*#main-container child*/
+
 
 /*controls*/
 #slider-container {
   width: 100%;
+  margin-top: 16.66%;
+  align-self: center;
   display: flex;
   justify-content: flex-start;
   border: 1px solid blue;
@@ -38,7 +91,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 4px;
+  padding: 16px;
 }
 
 .slider-label {
@@ -68,13 +121,13 @@ input[type=range] {
     justify-content: flex-start;
   }
 
-  #main-holder {
+  #main-container {
     width: 100%;
     height: 50vh;
     order: 2;
 
   }
-  #sketch-holder {
+  #sketch-container {
     width: 100%;
     height: 50vh;
     order: 1;

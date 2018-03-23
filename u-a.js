@@ -242,7 +242,7 @@ document.addEventListener("DOMContentLoaded", function() {
               //add normal white squares
             } else {
               p.fill(255)
-              p.noStroke();
+              p.stroke(255);
               p.rect(j*w, i*w, w, w);
             }
             //if 0 = black square (inverted)
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 //add normal black square
               } else  {
                 p.fill(0)
-                p.noStroke();
+                p.stroke(0);
                 p.rect(j*w, i*w, w, w);
               }
           }
