@@ -30,21 +30,12 @@ html, body {
   border: 1px solid black;
 }
 
-/*land three child*/
+/*land child*/
 
-#quest-container {
-  width: 100%;
-  min-height: 16.66%;
-  background-color: #eee;
-}
-
-#quest-container h1 {
-  width: 50%;
-}
 
 #main-container {
   width: 50%;
-  height: calc(100% - 16.66%);
+  height: 100%;
   border: 1px solid red;
   display: flex;
   flex-direction: column;
@@ -53,7 +44,6 @@ html, body {
 
 #sketch-container {
   width: 49%;
-  height: calc(100% - 16.66%);
   border: 1px solid green;
   display: flex;
   flex-direction: column;
@@ -63,7 +53,7 @@ html, body {
 
 #sketch-holder {
   width: 50%;
-  margin-top: 16.66%;
+  margin-top: 8.33%;
   margin-left: 16.66%;
   margin-right: 16.66%;
   margin-bottom: 16.66%;
@@ -73,11 +63,24 @@ html, body {
 
 /*#main-container child*/
 
+#quest-container {
+  width: 100%;
+  min-height: 16.66%;
+  background-color: #eee;
+  margin-top: 8.33%;
+}
+
+#quest-container h1 {
+  margin-top: 0;
+  padding-top: 0;
+  width: 50%;
+}
+
+
 
 /*controls*/
 #slider-container {
   width: 100%;
-  margin-top: 16.66%;
   align-self: center;
   display: flex;
   justify-content: flex-start;
@@ -111,6 +114,24 @@ input[type=range] {
   font-size: 16px;
 
 }
+
+/*nav*/
+#nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 21px;
+}
+
+#nav div {
+  width: 25%;
+}
+
+#nav div:nth-of-type(1){
+  width: 50%;
+}
+
 
 /* media queries */
 
