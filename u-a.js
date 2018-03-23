@@ -57,7 +57,8 @@ document.addEventListener("DOMContentLoaded", function() {
   ];
 
   var currentRule = 0;
-  var w = 50;
+  var canvasWidth = (matContainer.clientWidth);
+  var w = (canvasWidth/cells.length+1);
 
   //adding colors:
   //write outside the draw() a function to add colors.
@@ -287,12 +288,10 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
   p.setup = function() {
-    p.createCanvas(800, 500);
+    p.createCanvas(canvasWidth, canvasWidth);
     p.stroke(255);
     p.noFill();
     //p.noLoop(); //draw doesn't loop
-
-
   };
 
   p.draw = function() {
