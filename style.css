@@ -27,7 +27,7 @@ html, body {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  border: 1px solid black;
+  /*border: 1px solid black;*/
 }
 
 /*land child*/
@@ -36,7 +36,7 @@ html, body {
 #main-container {
   width: 50%;
   height: 100%;
-  border: 1px solid red;
+  /*border: 1px solid red;*/
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -44,7 +44,7 @@ html, body {
 
 #sketch-container {
   width: 49%;
-  border: 1px solid green;
+  /*border: 1px solid green;*/
   display: flex;
   flex-direction: column;
 }
@@ -58,7 +58,7 @@ html, body {
   margin-right: 16.66%;
   margin-bottom: 16.66%;
   align-self: center;
-  border: 2px pink solid;
+  /*border: 2px pink solid;*/
 }
 
 /*#main-container child*/
@@ -84,7 +84,7 @@ html, body {
   align-self: center;
   display: flex;
   justify-content: flex-start;
-  border: 1px solid blue;
+  /*border: 1px solid blue;*/
 }
 #slider-container div {
   width: 50%;
