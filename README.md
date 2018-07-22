@@ -5,4 +5,5 @@ Logo Generator based on Cellular Automata and other parameters
 ## Working Example
 
 ![logo gif](https://media.giphy.com/media/46zKX5Bnt6ri3tmeJY/giphy.gif)
-Test the logo --> https://huc91.github.io/cellular-automata/
+
+Try it out --> https://huc91.github.io/cellular-automata/
