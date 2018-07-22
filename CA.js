@@ -1,6 +1,5 @@
 //wolfram automaton
 //array of cells
-//edit on Shiffman example
 var cells = [0, 0, 0 ,1 ,1 ,1 ,0 ,0 ,0];
 var art = 0.2
 
