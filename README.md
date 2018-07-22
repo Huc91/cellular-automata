@@ -2,7 +2,7 @@
 
 Logo Generator based on Cellular Automata and other parameters
 
-##Working Example
+## Working Example
 
-![](http://www.giphy.com/gifs/46zKX5Bnt6ri3tmeJY)
+![logo gif](https://media.giphy.com/media/46zKX5Bnt6ri3tmeJY/giphy.gif)
 Test the logo --> https://huc91.github.io/cellular-automata/
