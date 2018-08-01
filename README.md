@@ -1,6 +1,6 @@
 # cellular-automata
 
-Logo Generator based on Cellular Automata and other parameters
+Logo Generator based on Cellular Automata.
 
 ## Working Example
 
